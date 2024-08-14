@@ -8,6 +8,7 @@ from fastapi.responses import RedirectResponse
 
 from . import models, schemas
 from .database import SessionLocal, engine
+from .keygen import generate_key
 
 app = FastAPI()
 models.Base.metadata.create_all(bind=engine)
@@ -39,9 +40,8 @@ def read_root():
 def create_url(url: schemas.URLBase, db: Session = Depends(get_db)):
     if not validators.url(url.target_url):
         raise_bad_request(message="Invalid URL provided")
-    chars = string.ascii_uppercase
-    key = "".join(secrets.choice(chars) for _ in range(5))
-    secret_key = "".join(secrets.choice(chars) for _ in range(8))
+    key = generate_key(5)
+    secret_key = generate_key(8)
     db_url = models.URL(target_url=url.target_url, key=key, secret_key=secret_key)
     db.add(db_url)
     db.commit()
