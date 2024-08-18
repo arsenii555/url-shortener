@@ -4,9 +4,9 @@ from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from starlette.datastructures import URL
 
-from . import crud, models, schemas
-from .config import get_settings
-from .database import SessionLocal, engine
+from shortener_app import crud, models, schemas
+from shortener_app.config import get_settings
+from shortener_app.database import SessionLocal, engine
 
 app = FastAPI()
 models.Base.metadata.create_all(bind=engine)
